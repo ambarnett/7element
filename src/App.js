@@ -1,15 +1,18 @@
 import './App.css';
+import React from 'react';
 import { LoginPage } from './components/loginPage';
+import { SignUpPage } from './components/signUpPage';
+import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App() {
-
-
+export const App = () => {
   return (
     <div className="App">
-      <h1 color='teal'>7Element Scheduler</h1>
-      <LoginPage/>
+      <Router>
+        <Routes>
+          <Route path='/login' element={<LoginPage />}/>
+          <Route path='/signUp' element={<SignUpPage />}/>
+        </Routes>
+      </Router>
     </div>
   );
 }
-
-export default App;

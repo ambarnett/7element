@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
 
 export const SignUpPage = () => {
     const [email, setEmail] = useState('')
@@ -11,7 +10,7 @@ export const SignUpPage = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
-            await firebase.auth().createUserWithEmailAndPassword(email, password);
+            await createUserWithEmailAndPassword(email, password);
         } catch (error) {
             setError(error);
         }

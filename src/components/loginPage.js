@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { auth } from '../config/firebase';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button, Form } from 'react-bootstrap';
 
@@ -7,7 +7,7 @@ import { Button, Form } from 'react-bootstrap';
 export const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState('')
+    const [error, setError] = useState("")
     
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -60,6 +60,9 @@ export const LoginPage = () => {
                             Login
                         </Button>
                     </Form>
+                    <p className='mt-3'>
+                        Don't have an account? <Link to='../signUp'>Click Here to Sign Up</Link>
+                    </p>
                 </div>
             </div>
         </div>
