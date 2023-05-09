@@ -1,18 +1,22 @@
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import {createUserWithEmailAndPassword} from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export const SignUpPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const navigate = useNavigate();
 
     const handleSignUp = async (e) => {
         e.preventDefault();
+        const auth = getAuth()
         try {
-            await createUserWithEmailAndPassword(email, password);
+            await createUserWithEmailAndPassword(auth, email, password)
+            navigate('/homePage')
         } catch (error) {
-            setError(error);
+            setError(error.toString());
         }
     };
 
