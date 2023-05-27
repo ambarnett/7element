@@ -26,22 +26,22 @@ const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-export const useAuth = () => {
-    const [authState, setAuthState] = useState(getAuth());
-    const [currentUser, setCurrentUser] = useState(null);
-    console.log(currentUser, 'currentUser on firebase page')
+// export const useAuth = () => {
+//     const [authState, setAuthState] = useState(getAuth());
+//     const [currentUser, setCurrentUser] = useState(null);
+//     console.log(currentUser, 'currentUser on firebase page')
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(authState, (user) => {
-            if (user) {
-                console.log(user, 'user in firebase page')
-                setCurrentUser(user);
-            } else {
-                setCurrentUser(null);
-            }
-        });
-        return () => unsubscribe();
-    }, [authState]);
+//     useEffect(() => {
+//         const unsubscribe = onAuthStateChanged(authState, (user) => {
+//             if (user) {
+//                 console.log(user, 'user in firebase page')
+//                 setCurrentUser(user);
+//             } else {
+//                 setCurrentUser(null);
+//             }
+//         });
+//         return () => unsubscribe();
+//     }, [authState]);
 
-    return { auth: authState, currentUser, setCurrentUser };
-}
+//     return { auth: authState, currentUser, setCurrentUser };
+// }

@@ -6,30 +6,23 @@ import { useAuth, auth } from '../config/firebase';
 
 
 export const LoginPage = () => {
-    const { setCurrentUser } = useAuth();
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
-    //         setCurrentUser(user);
-    //     });
-
-    //     return () => unsubscribe();
-    // }, []); //Empty dependency array to run the effect only once
-    
     const handleLogin = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setCurrentUser(userCredential.user)
+            await signInWithEmailAndPassword(auth, email, password);
             navigate('/homePage')
         } catch (error) {
-            setError(error.message);
+            console.error(error.toString())
+            
         }
     }
+
 
 
     // ? Currently disabled. Need to be able to verify user somehow

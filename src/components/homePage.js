@@ -1,50 +1,43 @@
-import { Link, redirect, useNavigate } from 'react-router-dom';
-import { useAuth } from '../config/firebase';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../config/firebase'; // Import the auth object from your firebase.js file
+import { async } from 'q';
 
 export const HomePage = () => {
-    const { currentUser } = useAuth();
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const [loggedInUser, setLoggedInUser] = useState(null)
-    const [error, setError] = useState("")
-    // const [loading, setLoading] = useState(true);
-    console.log(currentUser, 'currentUser on Home page')
 
-    const getUser = async () => {
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setLoading(false);
+            if (!user) {
+                navigate('/login'); // Redirect to the login page if the user is not logged in
+            }
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
+
+    const handleSignOut = async () => {
         try {
-            const userCredentials = await currentUser
-            setLoggedInUser(userCredentials)
-
+            await auth.signOut();
+            navigate('/login')
         } catch (error) {
-            setError(error.message)
+            console.error(error.toString())
         }
     }
 
-    getUser()
-    console.log(getUser(), 'getUser')
-
-    // useEffect(() => {
-    //     if (!currentUser) {
-    //         // navigate('/login');
-    //         console.log("no current user")
-    //         console.log(currentUser, 'currentUser inside useEffect')
-    //     } 
-    // }, [currentUser, navigate]);
-
-    // if (loading) {
-    //     return (
-    //         <div className='container mt-5'><h1>Loading...</h1></div>
-    //     )
-    // }
-
-    // if (!currentUser) {
-    //     return null;
-    // }
-    // this little if statement stops the page from very briefly flashing the details of the home page before redirecting if no user is logged in
+    if (loading) {
+        return <div>Loading...</div>; // You can show a loading indicator while checking the authentication status
+    }
 
     return (
-        <div className='container mt-5'>
-            <h1>Home Page</h1>
+        <div className="container">
+            <h1 className="mt-4 mb-4">Welcome to the Home Page!</h1>
+            <button className="btn btn-primary" onClick={ handleSignOut }>
+                Sign Out
+            </button>
+            {/* Add your home page content here */ }
         </div>
-    )
-}
+    );
+};
