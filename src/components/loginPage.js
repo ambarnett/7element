@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button, Form } from 'react-bootstrap';
-import { useAuth, auth } from '../config/firebase';
+import { auth } from '../config/firebase';
 
 
 export const LoginPage = () => {

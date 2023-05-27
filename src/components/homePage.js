@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase'; // Import the auth object from your firebase.js file
-import { async } from 'q';
+import { Button } from 'react-bootstrap';
 
 export const HomePage = () => {
     const [loading, setLoading] = useState(true);
@@ -34,10 +34,13 @@ export const HomePage = () => {
     return (
         <div className="container">
             <h1 className="mt-4 mb-4">Welcome to the Home Page!</h1>
-            <button className="btn btn-primary" onClick={ handleSignOut }>
+            <Button onClick={ handleSignOut }>
                 Sign Out
-            </button>
-            {/* Add your home page content here */ }
+            </Button>
+            <Button onClick={() => navigate('/events')}>Events</Button>
+            <Button onClick={() => navigate('/players')}>Players</Button>
+            <Button onClick={ () => navigate('/about') }>About</Button>
+            
         </div>
     );
 };

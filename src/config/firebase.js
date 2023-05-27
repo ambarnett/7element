@@ -1,9 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged, } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { useEffect, useState } from "react";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,23 +24,3 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-
-// export const useAuth = () => {
-//     const [authState, setAuthState] = useState(getAuth());
-//     const [currentUser, setCurrentUser] = useState(null);
-//     console.log(currentUser, 'currentUser on firebase page')
-
-//     useEffect(() => {
-//         const unsubscribe = onAuthStateChanged(authState, (user) => {
-//             if (user) {
-//                 console.log(user, 'user in firebase page')
-//                 setCurrentUser(user);
-//             } else {
-//                 setCurrentUser(null);
-//             }
-//         });
-//         return () => unsubscribe();
-//     }, [authState]);
-
-//     return { auth: authState, currentUser, setCurrentUser };
-// }
