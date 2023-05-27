@@ -1,22 +1,36 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Button, Form } from 'react-bootstrap';
+import { useAuth, auth } from '../config/firebase';
 
 
 export const LoginPage = () => {
+    const { setCurrentUser } = useAuth();
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
+    const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //         setCurrentUser(user);
+    //     });
+
+    //     return () => unsubscribe();
+    // }, []); //Empty dependency array to run the effect only once
     
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
-            await signInWithEmailAndPassword(email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            setCurrentUser(userCredential.user)
+            navigate('/homePage')
         } catch (error) {
             setError(error.message);
         }
     }
+
 
     // ? Currently disabled. Need to be able to verify user somehow
     // TODO find way to verify user or link account???

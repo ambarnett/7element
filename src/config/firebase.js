@@ -27,15 +27,21 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 export const useAuth = () => {
-    const [auth, setAuth] = useState(getAuth());
+    const [authState, setAuthState] = useState(getAuth());
     const [currentUser, setCurrentUser] = useState(null);
+    console.log(currentUser, 'currentUser on firebase page')
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
+        const unsubscribe = onAuthStateChanged(authState, (user) => {
+            if (user) {
+                console.log(user, 'user in firebase page')
+                setCurrentUser(user);
+            } else {
+                setCurrentUser(null);
+            }
         });
         return () => unsubscribe();
-    }, [auth]);
+    }, [authState]);
 
-    return { auth, currentUser };
+    return { auth: authState, currentUser, setCurrentUser };
 }
