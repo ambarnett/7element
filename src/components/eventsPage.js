@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { db } from "../config/firebase";
@@ -24,9 +24,37 @@ export const Events = () => {
 
     console.log(events, 'events')
 
-    const handleRSVP = (eventId) => {
-        // Implement RSVP logic here, such as updating the RSVP status in Firestore
-        console.log(`RSVP clicked for event ID: ${eventId}`)
+    const handleRSVP = async (eventId, rsvpType) => {
+        try {
+            const eventRef = doc(db, 'events', eventId);
+            const eventDoc = await getDoc(eventRef);
+
+            if (eventDoc.exists()) {
+                const event = eventDoc.data();
+                const currentSkaters = event.skaters || 0;
+
+                // Update the number of skaters based on RSVP type
+                let updatedSkaters = currentSkaters;
+                if (rsvpType === 'in') {
+                    updatedSkaters++;
+                } else if (rsvpType === 'out') {
+                    updatedSkaters--;
+                }
+
+                // Update the event document in Firestore
+                await updateDoc(eventRef, { skaters: updatedSkaters })
+                
+                console.log(`RSVP ${rsvpType} click for event ID: ${eventId}`)
+
+                setEvents((prevEvents) => 
+                    prevEvents.map((event) => 
+                      event.id === eventId ? { ...event, skaters: updatedSkaters} : event  
+                    )
+                )
+            }
+        } catch (error) {
+            console.error(error.toString())
+        }
     }
 
     return (
@@ -41,7 +69,8 @@ export const Events = () => {
                     <p>Type: { event.type }</p>
                     <p>Skaters: { event.skaters }</p>
                     <p>Goalies: { event.goalies }</p>
-                    <Button onClick={() => handleRSVP(event.id)}>RSVP</Button>
+                    <Button onClick={ () => handleRSVP(event.id, 'in') }>IN</Button>
+                    <Button onClick={ () => handleRSVP(event.id, 'out') }>OUT</Button>
                 </div>
             ))}
         </Container>
