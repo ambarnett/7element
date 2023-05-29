@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-do
 import { HomePage } from './components/homePage';
 import { Events } from './components/eventsPage';
 import { auth } from './config/firebase';
+import { NavBar } from './components/navbar';
 
 export const App = () => {
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,7 @@ export const App = () => {
   return (
     <div className="App">
       <Router>
+        <NavBar/>
         <Routes>
           { !user ? (
             <Route path='/' element={<Navigate to='/login' replace={true}/>}/>
