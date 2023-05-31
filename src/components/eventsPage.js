@@ -1,12 +1,15 @@
 import { collection, getDocs, updateDoc, doc, getDoc, addDoc, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Button, Container, Modal } from "react-bootstrap";
+import { Button, Container, Form, Modal } from "react-bootstrap";
 import { db } from "../config/firebase";
 
 export const Events = ({ isAdmin }) => {
     const [events, setEvents] = useState([])
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState('')
+    const [eventInfo, setEventInfo] = useState('')
+    const [skillLevel, setSkillLevel] = useState('')
+    const [eventType, setEventType] = useState('')
     const [dateTime, setDateTime] = useState(null)
     const [location, setLocation] = useState('')
 
@@ -78,6 +81,9 @@ export const Events = ({ isAdmin }) => {
             title,
             dateTime : dateTime ? Timestamp.fromDate(dateTime) : null,
             location,
+            info: eventInfo ? eventInfo : "No extra info to add",
+            skill_level: skillLevel ? skillLevel : "All",
+            type: eventType ? eventType : "Skate",
             skaters: 0,
             goalies: 0,
         };
@@ -90,6 +96,9 @@ export const Events = ({ isAdmin }) => {
             setTitle('')
             setDateTime(null)
             setLocation('')
+            setEventInfo('')
+            setSkillLevel('')
+            setEventType('')
 
             //Close the modal
             setShowModal(false);
@@ -127,12 +136,59 @@ export const Events = ({ isAdmin }) => {
                     <Modal.Title>Create Event</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* Add the form to create a new event */}
+                    <Form onSubmit={handleFormSubmit}>
+                        <Form.Group controlId="formTitle">
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={ title }
+                                onChange={ e => setTitle(e.target.value) }
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formDateTime">
+                            <Form.Label>Date and Time</Form.Label>
+                            <Form.Control
+                                type="datetime-local"
+                                value={ dateTime ? dateTime.toISOString().substring(0, 16) : '' }
+                                onChange={e => setDateTime(new Date(e.target.value))}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formLocation">
+                            <Form.Label>Location</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={ location }
+                                onChange={e => setLocation(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formEventInfo">
+                            <Form.Label>Info</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={ eventInfo }
+                                onChange={e => setEventInfo(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formSkillLevel">
+                            <Form.Label>Skill Level</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={ skillLevel } 
+                                onChange={e => setSkillLevel(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Type of skate</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={ eventType }
+                                onChange={e => setEventType(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Button variant="secondary" onClick={ handleCloseModal }>Cancel</Button>
+                        <Button variant="primary" onClick={handleFormSubmit}>Save Event</Button>
+                    </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={ handleCloseModal }>Cancel</Button>
-                    <Button variant="primary" onClick={handleCreateEvent}>Save Event</Button>
-                </Modal.Footer>
             </Modal>
         </Container>
     )
