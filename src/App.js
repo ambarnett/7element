@@ -7,10 +7,13 @@ import { HomePage } from './components/homePage';
 import { Events } from './components/eventsPage';
 import { auth } from './config/firebase';
 import { NavBar } from './components/navbar';
+import { db } from './config/firebase';
+import { getAuth } from 'firebase/auth';
 
 export const App = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -21,6 +24,9 @@ export const App = () => {
     return () => unsubscribe();
   }, [])
 
+  
+
+  
   if (loading) {
     return <div>Loading...</div>
   }
@@ -38,7 +44,7 @@ export const App = () => {
           <Route path='/homePage' element={ <HomePage /> } />
           <Route path='/login' element={<LoginPage />}/>
           <Route path='/signUp' element={ <SignUpPage /> } />
-          <Route path='/events' element={ <Events /> } />
+          <Route path='/events' element={ <Events isAdmin={isAdmin} /> } />
         </Routes>
       </Router>
     </div>

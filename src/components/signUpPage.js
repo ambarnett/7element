@@ -2,6 +2,8 @@ import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 export const SignUpPage = () => {
     const [email, setEmail] = useState('')
@@ -13,7 +15,13 @@ export const SignUpPage = () => {
         e.preventDefault();
         const auth = getAuth()
         try {
-            await createUserWithEmailAndPassword(auth, email, password)
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+
+            const userRef = doc(db, 'users', userCredential.user.uid);
+            await setDoc(userRef, {
+                email: userCredential.user.email,
+                isAdmin: false,
+            })
             navigate('/homePage')
         } catch (error) {
             setError(error.toString());
