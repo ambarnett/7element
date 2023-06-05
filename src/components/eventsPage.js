@@ -1,6 +1,6 @@
 import { collection, getDocs, updateDoc, doc, getDoc, addDoc, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Button, Container, Form, Modal } from "react-bootstrap";
+import { Button, Container, Form, Modal, Stack } from "react-bootstrap";
 import { db } from "../config/firebase";
 
 export const Events = ({ isAdmin }) => {
@@ -29,8 +29,6 @@ export const Events = ({ isAdmin }) => {
     useEffect(() => {
         fetchEvents();
     }, [])
-
-    console.log(events, 'events')
 
     const handleRSVP = async (eventId, rsvpType) => {
         try {
@@ -113,13 +111,13 @@ export const Events = ({ isAdmin }) => {
     }
 
     return (
-        <Container>
+        <Container className="border">
             <h1>Events</h1>
             { !isAdmin && (
                 <Button onClick={handleCreateEvent} variant="primary">Create Event</Button>
             )}
             { events.map((event) => (
-                <div key={ event.id }>
+                <Stack gap={ 2 } key={ event.id }>
                     <h2>{ event.title }</h2>
                     <p>Info: { event.info }</p>
                     <p>Location: { event.location }</p>
@@ -129,7 +127,7 @@ export const Events = ({ isAdmin }) => {
                     <p>Goalies: { event.goalies }</p>
                     <Button onClick={ () => handleRSVP(event.id, 'in') }>IN</Button>
                     <Button onClick={ () => handleRSVP(event.id, 'out') }>OUT</Button>
-                </div>
+                </Stack>
             )) }
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
