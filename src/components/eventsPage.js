@@ -2,16 +2,18 @@ import { collection, getDocs, updateDoc, doc, getDoc, addDoc, Timestamp } from "
 import { useEffect, useState } from "react";
 import { Button, Container, Form, Modal, Stack } from "react-bootstrap";
 import { db } from "../config/firebase";
+import { getAuth } from "firebase/auth";
 
-export const Events = ({ isAdmin }) => {
+export const Events = () => {
     const [events, setEvents] = useState([])
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false)
     const [title, setTitle] = useState('')
     const [eventInfo, setEventInfo] = useState('')
     const [skillLevel, setSkillLevel] = useState('')
     const [eventType, setEventType] = useState('')
     const [dateTime, setDateTime] = useState(null)
     const [location, setLocation] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const fetchEvents = async () => {
         try {
@@ -26,8 +28,34 @@ export const Events = ({ isAdmin }) => {
         }
     };
 
+    const checkAdminStatus = async () => {
+        console.log('check admin status')
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            if (user) {
+                // Fetch user data from Firestore
+                const userRef = doc(db, 'users', user.uid)
+                const userSnapshot = await getDoc(userRef);
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    if (userData && userData.isAdmin) {
+                        setIsAdmin(true);
+                    } else {
+                        setIsAdmin(false);
+                    }
+                }
+            } else {
+                setIsAdmin(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         fetchEvents();
+        checkAdminStatus();
     }, [])
 
     const handleRSVP = async (eventId, rsvpType) => {
@@ -113,7 +141,7 @@ export const Events = ({ isAdmin }) => {
     return (
         <Container className="border">
             <h1>Events</h1>
-            { !isAdmin && (
+            { isAdmin && (
                 <Button onClick={handleCreateEvent} variant="primary">Create Event</Button>
             )}
             { events.map((event) => (

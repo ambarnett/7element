@@ -7,6 +7,8 @@ import { HomePage } from './components/homePage';
 import { Events } from './components/eventsPage';
 import { auth } from './config/firebase';
 import { NavBar } from './components/navbar';
+import { db } from './config/firebase';
+import { getAuth } from 'firebase/auth';
 
 export const App = () => {
   const [loading, setLoading] = useState(true);
@@ -23,28 +25,12 @@ export const App = () => {
   }, [])
 
   
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      try {
-        const user = auth.currentUser;
-        //check if the user is logged in and has the admin role
-        if (user && user.admin) {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    
-    checkAdminStatus();
-  }, [])
+
   
   if (loading) {
     return <div>Loading...</div>
   }
-  
+
   return (
     <div className="App">
       <Router>
