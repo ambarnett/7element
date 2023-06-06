@@ -22,6 +22,7 @@ export const SignUpPage = () => {
                 email: userCredential.user.email,
                 isAdmin: false,
             })
+            // TODO: add part for user to enter first and last name (minimum) on sign up. Maybe enter more information?
             navigate('/homePage')
         } catch (error) {
             setError(error.toString());
