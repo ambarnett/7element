@@ -36,6 +36,9 @@ export const NavBar = () => {
                     <Nav.Link as={ Link } to="/help">
                         Help
                     </Nav.Link>
+                    <Nav.Link as={ Link } to="/help">
+                        My Profile
+                    </Nav.Link>
                     {/** Add more Nav.Link components for navigation links */}
                 </Nav>
                 <Button variant="outline-light" onClick={ handleSignOut }>
