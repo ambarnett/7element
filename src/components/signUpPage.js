@@ -22,7 +22,7 @@ export const SignUpPage = () => {
                 email: userCredential.user.email,
                 isAdmin: false,
             })
-            navigate('/homePage')
+            navigate('/profile')
         } catch (error) {
             setError(error.toString());
         }

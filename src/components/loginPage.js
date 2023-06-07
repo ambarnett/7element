@@ -16,9 +16,17 @@ export const LoginPage = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
+            const user = auth.currentUser;
+            if (user.first_name && user.last_name) {
+                // Redirect to the home page
+                navigate('/')
+            } else {
+                // Redirect to the profile page to complete the profile
+                navigate('/profile')
+            }
             navigate('/homePage')
         } catch (error) {
-            console.error(error.toString())
+            setError(error.toString())
             
         }
     }

@@ -2,9 +2,8 @@ import { collection, getDocs, updateDoc, doc, getDoc, addDoc, Timestamp } from "
 import { useEffect, useState } from "react";
 import { Button, Container, Form, Modal, Stack } from "react-bootstrap";
 import { db } from "../config/firebase";
-import { getAuth } from "firebase/auth";
 
-export const Events = () => {
+export const Events = ({ isAdmin }) => {
     const [events, setEvents] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [title, setTitle] = useState('')
@@ -13,7 +12,6 @@ export const Events = () => {
     const [eventType, setEventType] = useState('')
     const [dateTime, setDateTime] = useState(null)
     const [location, setLocation] = useState('')
-    const [isAdmin, setIsAdmin] = useState(false)
 
     const fetchEvents = async () => {
         try {
@@ -28,34 +26,8 @@ export const Events = () => {
         }
     };
 
-    const checkAdminStatus = async () => {
-        console.log('check admin status')
-        try {
-            const auth = getAuth();
-            const user = auth.currentUser;
-            if (user) {
-                // Fetch user data from Firestore
-                const userRef = doc(db, 'users', user.uid)
-                const userSnapshot = await getDoc(userRef);
-                if (userSnapshot.exists()) {
-                    const userData = userSnapshot.data();
-                    if (userData && userData.isAdmin) {
-                        setIsAdmin(true);
-                    } else {
-                        setIsAdmin(false);
-                    }
-                }
-            } else {
-                setIsAdmin(false);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     useEffect(() => {
         fetchEvents();
-        checkAdminStatus();
     }, [])
 
     const handleRSVP = async (eventId, rsvpType) => {
@@ -77,8 +49,6 @@ export const Events = () => {
 
                 // Update the event document in Firestore
                 await updateDoc(eventRef, { skaters: updatedSkaters })
-                
-                console.log(`RSVP ${rsvpType} click for event ID: ${eventId}`)
 
                 setEvents((prevEvents) => 
                     prevEvents.map((event) => 
@@ -131,8 +101,6 @@ export const Events = () => {
 
             //Refresh the events data
             fetchEvents();
-
-            console.log('Event created: ', event)
         } catch (error) {
             console.log(error)
         }
